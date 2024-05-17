@@ -2,7 +2,10 @@ module github.com/deepjyoti-sarmah/go_htmx_hardware_monitor
 
 go 1.22.1
 
-require github.com/shirou/gopsutil/v4 v4.24.0-beta
+require (
+	github.com/shirou/gopsutil/v4 v4.24.0-beta
+	nhooyr.io/websocket v1.8.11
+)
 
 require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
