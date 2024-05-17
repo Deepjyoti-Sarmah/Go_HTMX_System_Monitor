@@ -92,39 +92,35 @@ func main() {
 	srv := NewServer()
 	go func (s *server)  {
 		for {
-			systemSection, err := hardware.GetSystemSection()
+			systemData, err := hardware.GetSystemSection()
 			if err != nil {
 				fmt.Println(err)
+				continue
 			}
 
-			diskSection, err := hardware.GetDiskSection()
+			diskData, err := hardware.GetDiskSection()
 			if err != nil {
 				fmt.Println(err)
+				continue
 			}
 
-			cpuSection, err := hardware.GetCpuSection()
+			cpuData, err := hardware.GetCpuSection()
 			if err != nil {
 				fmt.Println(err)
+				continue
 			}
 
 			timeStamp := time.Now().Format("2006-01-02 15:04:05")
 
-			html := `
-			<div hx-swap-oob="innerHTML:#update-timestamp">
-				`+timeStamp+`
-			</div>
-			<div hx-swap-oob="innerHTML:#system-data">
-				`+systemSection+`
-			</div>
-			<div hx-swap-oob="innerHTML:#disk-data">
-				`+diskSection+`
-			</div>
-			<div hx-swap-oob="innerHTML:#cpu-data">
-				`+cpuSection+`
-			</div>
-			`
-			s.publishMsg([]byte(html))
-
+			msg := []byte(`
+				<div hx-swap-oob="innerHTML:#update-timestamp">
+					<p><i style="color: green" class="fa fa-circle"></i> ` + timeStamp + `</p>
+				</div>
+				<div hx-swap-oob="innerHTML:#system-data">` + systemData + `</div>
+				<div hx-swap-oob="innerHTML:#cpu-data">` + cpuData + `</div>
+				<div hx-swap-oob="innerHTML:#disk-data">` + diskData + `</div>
+			`)
+			s.publishMsg(msg)
 			time.Sleep(3 * time.Second)
 		}
 	}(srv)
