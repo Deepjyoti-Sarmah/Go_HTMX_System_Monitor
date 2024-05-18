@@ -13,10 +13,10 @@ import (
 )
 
 type server struct {
-	subscriberMessageBuffer int 
-	mux http.ServeMux
-	subscriberMutex sync.Mutex
-	subscribers map[*subscriber]struct{}
+	subscriberMessageBuffer int
+	mux                     http.ServeMux
+	subscriberMutex         sync.Mutex
+	subscribers             map[*subscriber]struct{}
 }
 
 type subscriber struct {
@@ -26,7 +26,7 @@ type subscriber struct {
 func NewServer() *server {
 	s := &server{
 		subscriberMessageBuffer: 10,
-		subscribers: make(map[*subscriber]struct{}),
+		subscribers:             make(map[*subscriber]struct{}),
 	}
 
 	s.mux.Handle("/", http.FileServer(http.Dir("./htmx")))
@@ -34,7 +34,7 @@ func NewServer() *server {
 	return s
 }
 
-func (s *server) subscribHandler(writer http.ResponseWriter, req *http.Request)  {
+func (s *server) subscribHandler(writer http.ResponseWriter, req *http.Request) {
 	err := s.subscribe(req.Context(), writer, req)
 	if err != nil {
 		fmt.Println(err)
@@ -58,14 +58,14 @@ func (s *server) subscribe(ctx context.Context, writer http.ResponseWriter, req 
 	ctx = c.CloseRead(ctx)
 	for {
 		select {
-		case msg := <- subscriber.msgs:
+		case msg := <-subscriber.msgs:
 			ctx, cancle := context.WithTimeout(ctx, time.Second)
 			defer cancle()
-			err := c.Write(ctx, websocket.MessageText, msg) 
+			err := c.Write(ctx, websocket.MessageText, msg)
 			if err != nil {
 				return err
 			}
-		case <- ctx.Done():
+		case <-ctx.Done():
 			return ctx.Err()
 		}
 	}
@@ -90,7 +90,7 @@ func (cs *server) publishMsg(msg []byte) {
 func main() {
 	fmt.Println("Starting system monitor...")
 	srv := NewServer()
-	go func (s *server)  {
+	go func(s *server) {
 		for {
 			systemData, err := hardware.GetSystemSection()
 			if err != nil {

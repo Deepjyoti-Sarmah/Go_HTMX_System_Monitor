@@ -4,17 +4,23 @@
         <title>Hardware Monitor</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- <link href="css/style.css" rel="stylesheet"> -->
     </head>
-    <body>
-        <h1>Go HTMX Hardware Monitor</h1>
-        <div hx-ext="ws" ws-connect="ws://localhost:8080/ws">
-            <div id="update-timestamp">Loading data... </div>
-            <div id="monitor-data">
-                <div id="system-data"></div>
-                <div id="disk-data"></div>
-                <div id="cpu-data"></div>
+    <body class="">
+        <div class="flex flex-col p-4 m-auto w-full gap-4">
+            <h1 class="text-center text-2xl font-bold p-2 m-auto">Go HTMX Hardware Monitor</h1>
+            <div hx-ext="ws" ws-connect="ws://localhost:8080/ws">
+                <div id="update-timestamp" class="flex flex-col text-xl text-center p-2">Loading data... </div>
+                <div id="monitor-data" class="flex flex-col bg-yellow-300 p-2 m-auto">
+                    <div class="flex flex-row item-center justify-end m-auto w-full p-2">
+                        <div id="system-data" class=" bg-blue-300 w-1/2 p-2 gap-2"></div>
+                        <div id="disk-data" class=" bg-green-300 w-1/2 p-2 gap-2"></div>
+                    </div>
+                    <div id="cpu-data" class="bg-red-300 p-2 gap-2"></div>
+                </div>
             </div>
+
         </div>
         <script
             src="https://unpkg.com/htmx.org@1.9.12"
