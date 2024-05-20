@@ -58,31 +58,31 @@ func GetDiskSection() (string, error) {
 }
 
 func GetCpuSection() (string, error) {
-    cpuStat, err := cpu.Info()
-    if err != nil {
-        return "", err
-    }
+	cpuStat, err := cpu.Info()
+	if err != nil {
+		return "", err
+	}
 
-    percentage, err := cpu.Percent(0, true)
-    if err != nil {
-        return "", nil
-    }
+	percentage, err := cpu.Percent(0, true)
+	if err != nil {
+		return "", nil
+	}
 
-    html := "<div class='cpu-data p-4 gap-4'>"
+	html := "<div class='cpu-data p-4 gap-4'>"
 
-    if len(cpuStat) != 0 {
+	if len(cpuStat) != 0 {
 		html += "<p class='mb-2'><span class='font-semibold text-lg'>Model Name: </span> <span id='cpu-model' class='text-right'>" + cpuStat[0].ModelName + "</span></p>" 
-        html += "<p class='mb-2'><span class='font-semibold text-lg'>Speed: </span> <span id='cpu-model' class='text-right'>" + strconv.FormatFloat(cpuStat[0].Mhz, 'f', 2, 64) + " MHz</span></p>"
-    }
-    html += "</div>"
+		html += "<p class='mb-2'><span class='font-semibold text-lg'>Speed: </span> <span id='cpu-model' class='text-right'>" + strconv.FormatFloat(cpuStat[0].Mhz, 'f', 2, 64) + " MHz</span></p>"
+	}
+	html += "</div>"
 
 	html += "<div class='cores-data grid grid-cols-2 md:grid-cols-4 gap-4 p-4'>"
-    for idx, cpupercent := range percentage {
-        html += "<div class='bg-gray-200 rounded-md py-1 px-2'><span class='font-semibold'>CPU [" + strconv.Itoa(idx) + "]:</span> " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</div>"
-    }
+	for idx, cpupercent := range percentage {
+		html += "<div class='bg-white rounded-md py-1 px-2'><span class='font-semibold'>CPU [" + strconv.Itoa(idx) + "]:</span> " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</div>"
+	}
 
-    html += "</div>"
+	html += "</div>"
 
-    return html, nil
+	return html, nil
 }
 

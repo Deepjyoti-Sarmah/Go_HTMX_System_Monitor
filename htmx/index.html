@@ -55,16 +55,18 @@
             <div hx-ext="ws" ws-connect="ws://localhost:8080/ws" id="monitor-data" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                 <div class="bg-white rounded-lg shadow p-4">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">System</h3>
-                    <div id="system-data" class="border border-gray-300 p-2"></div>
+                    <div id="system-data" class="bg-gray-100 rounded-lg p-2"></div>
                 </div>
                 <div class="bg-white rounded-lg shadow p-4">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Disk</h3>
-                    <div id="disk-data" class="border border-gray-300 p-2"></div>
+                    <div id="disk-data" class="bg-gray-100 rounded-lg p-2"></div>
                 </div>
                 <div class="bg-white md:col-span-2 rounded-lg shadow p-4">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">CPU</h3>
-                    <div id="cpu-data"></div>
-                    <div id="cores-data" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                    <div class="bg-gray-100">
+                        <div id="cpu-data"></div>
+                        <div id="cores-data" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                    </div>
                 </div>
             </div>
         </div>
