@@ -57,39 +57,66 @@ func GetDiskSection() (string, error) {
 	return html, nil
 }
 
+// func GetCpuSection() (string, error) {
+// 	cpuStat, err := cpu.Info()
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	percentage, err := cpu.Percent(0, true)
+// 	if err != nil {
+// 		return "", nil
+// 	}
+
+// 	html := "<div class='cpu-data'><table class='table-auto'><tbody>"
+
+// 	if len(cpuStat) != 0 {
+// 		html = html + "<tr><td class='font-semibold text-lg'>Model Name:</td><td>" + cpuStat[0].ModelName + "</td></tr>"
+// 		html = html + "<tr><td class='font-semibold text-lg'>Family:</td><td>" + cpuStat[0].Family + "</td></tr>"
+// 		html = html + "<tr><td class='font-semibold text-lg'>Speed:</td><td>" + strconv.FormatFloat(cpuStat[0].Mhz, 'f', 2, 64) + " MHz</td></tr>"
+// 	}
+
+// 	firstCpus := percentage[:len(percentage)/2]
+// 	secondCpus := percentage[len(percentage)/2:]
+
+// 	html = html + "<tr><td class='font-semibold text-lg'>Cores: </td><td><div class='row mb-4'><div class='col-md-6'><table class='table-auto'><tbody>"
+// 	for idx, cpupercent := range firstCpus {
+// 		html = html + "<tr><td class='font-semibold text-lg'>CPU [" + strconv.Itoa(idx) + "]: " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</td></tr>"
+// 	}
+
+// 	html = html + "</tbody></table></div><div class='col-md-6'><table class='table-auto'><tbody>"
+// 	for idx, cpupercent := range secondCpus {
+// 		html = html + "<tr><td class='font-semibold text-lg'>CPU [" + strconv.Itoa(idx+8) + "]: " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</td></tr>"
+// 	}
+
+// 	html = html + "</tbody></table></div></div></td></tr></tbody></table></div>"
+
+// 	return html, nil
+// }
+
 func GetCpuSection() (string, error) {
-	cpuStat, err := cpu.Info()
-	if err != nil {
-		return "", err
-	}
+    cpuStat, err := cpu.Info()
+    if err != nil {
+        return "", err
+    }
 
-	percentage, err := cpu.Percent(0, true)
-	if err != nil {
-		return "", nil
-	}
+    percentage, err := cpu.Percent(0, true)
+    if err != nil {
+        return "", nil
+    }
 
-	html := "<div class='cpu-data'><table class='table-auto'><tbody>"
+    html := "<div class='grid grid-cols-2 gap-2'>"
 
-	if len(cpuStat) != 0 {
-		html = html + "<tr><td class='font-semibold text-lg'>Model Name:</td><td>" + cpuStat[0].ModelName + "</td></tr>"
-		html = html + "<tr><td class='font-semibold text-lg'>Family:</td><td>" + cpuStat[0].Family + "</td></tr>"
-		html = html + "<tr><td class='font-semibold text-lg'>Speed:</td><td>" + strconv.FormatFloat(cpuStat[0].Mhz, 'f', 2, 64) + " MHz</td></tr>"
-	}
+    if len(cpuStat) != 0 {
+        html += "<span id='cpu-model'>" + cpuStat[0].ModelName + "</span>"
+        html += "<span id='cpu-speed'>" + strconv.FormatFloat(cpuStat[0].Mhz, 'f', 2, 64) + " MHz</span>"
+    }
 
-	firstCpus := percentage[:len(percentage)/2]
-	secondCpus := percentage[len(percentage)/2:]
+    for idx, cpupercent := range percentage {
+        html += "<div class='bg-gray-200 rounded-md py-1 px-2'><span class='font-semibold'>CPU [" + strconv.Itoa(idx) + "]:</span> " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</div>"
+    }
 
-	html = html + "<tr><td class='font-semibold text-lg'>Cores: </td><td><div class='row mb-4'><div class='col-md-6'><table class='table-auto'><tbody>"
-	for idx, cpupercent := range firstCpus {
-		html = html + "<tr><td class='font-semibold text-lg'>CPU [" + strconv.Itoa(idx) + "]: " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</td></tr>"
-	}
+    html += "</div>"
 
-	html = html + "</tbody></table></div><div class='col-md-6'><table class='table-auto'><tbody>"
-	for idx, cpupercent := range secondCpus {
-		html = html + "<tr><td class='font-semibold text-lg'>CPU [" + strconv.Itoa(idx+8) + "]: " + strconv.FormatFloat(cpupercent, 'f', 2, 64) + "%</td></tr>"
-	}
-
-	html = html + "</tbody></table></div></div></td></tr></tbody></table></div>"
-
-	return html, nil
+    return html, nil
 }
