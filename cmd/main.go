@@ -58,6 +58,7 @@ func (s *server) subscribe(ctx context.Context, writer http.ResponseWriter, req 
 		msgs: make(chan []byte, s.subscriberMessageBuffer),
 	}
 	s.addSubscriber(subscriber)
+	defer s.removeSubscriber(subscriber)
 
 	c, err := websocket.Accept(writer, req, nil)
 	if err != nil {
@@ -79,6 +80,13 @@ func (s *server) subscribe(ctx context.Context, writer http.ResponseWriter, req 
 			return ctx.Err()
 		}
 	}
+}
+
+func (s *server) removeSubscriber(subscriber *subscriber) {
+	s.subscriberMutex.Lock()
+	defer s.subscriberMutex.Unlock()
+	delete(s.subscribers, subscriber)
+	fmt.Println("Removed subscriber", subscriber)
 }
 
 func (s *server) addSubscriber(subscriber *subscriber) {
