@@ -34,7 +34,7 @@ func NewServer() (*server, http.Handler) {
 	s.mux.HandleFunc("/ws", s.subscribHandler)
 
 	 corsConfig := cors.New(cors.Options{
-        AllowedOrigins:   []string{"http://localhost:8080"},
+        AllowedOrigins:   []string{"http://localhost:8080", "https://webtop-pw7d.onrender.com"},
         AllowCredentials: true,
         Debug:            true,
     })
