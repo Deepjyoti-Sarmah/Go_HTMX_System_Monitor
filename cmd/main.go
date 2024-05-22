@@ -33,7 +33,14 @@ func NewServer() (*server, http.Handler) {
 	s.mux.Handle("/", http.FileServer(http.Dir("./htmx")))
 	s.mux.HandleFunc("/ws", s.subscribHandler)
 
-	handler := cors.Default().Handler(&s.mux)
+	 corsConfig := cors.New(cors.Options{
+        AllowedOrigins:   []string{"http://localhost:8080"},
+        AllowCredentials: true,
+        Debug:            true,
+    })
+
+    handler := corsConfig.Handler(&s.mux)
+	// handler := cors.Default().Handler(&s.mux)
 	return s, handler
 }
 
