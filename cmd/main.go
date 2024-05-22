@@ -10,6 +10,7 @@ import (
 
 	"github.com/deepjyoti-sarmah/go_htmx_hardware_monitor/internal/hardware"
 	"nhooyr.io/websocket"
+	"github.com/rs/cors"
 )
 
 type server struct {
@@ -23,7 +24,7 @@ type subscriber struct {
 	msgs chan []byte
 }
 
-func NewServer() *server {
+func NewServer() (*server, http.Handler) {
 	s := &server{
 		subscriberMessageBuffer: 10,
 		subscribers:             make(map[*subscriber]struct{}),
@@ -31,13 +32,15 @@ func NewServer() *server {
 
 	s.mux.Handle("/", http.FileServer(http.Dir("./htmx")))
 	s.mux.HandleFunc("/ws", s.subscribHandler)
-	return s
+
+	handler := cors.Default().Handler(&s.mux)
+	return s, handler
 }
 
 func (s *server) subscribHandler(writer http.ResponseWriter, req *http.Request) {
 	err := s.subscribe(req.Context(), writer, req)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("err",err)
 		return
 	}
 }
@@ -89,7 +92,7 @@ func (cs *server) publishMsg(msg []byte) {
 
 func main() {
 	fmt.Println("Starting system monitor...")
-	srv := NewServer()
+	srv, handler := NewServer()
 	go func(s *server) {
 		for {
 			systemData, err := hardware.GetSystemSection()
@@ -125,7 +128,7 @@ func main() {
 		}
 	}(srv)
 
-	err := http.ListenAndServe(":8080", &srv.mux)
+	err := http.ListenAndServe(":8080", handler)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
