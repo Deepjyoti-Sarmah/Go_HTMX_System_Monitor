@@ -105,14 +105,21 @@ func GetRunningProcess() (string, error) {
 		procs = append(procs, proc)
 	}
 
+	html := "<div class='process-data p-4 gap-4'>"
+
 	var processInfo []string 
-	for _, p := range procs {
+	for i, p := range procs {
+		if i >= 10 {
+			break
+		}
 		name, _ := p.Name()
 		username, _ := p.Username()
 		cmdline, _ := p.Cmdline()
-		processInfo = append(processInfo, fmt.Sprintf("<li>Name: %s, User: %s, Command: %s</li>", name, username, cmdline))
+		processInfo = append(processInfo, fmt.Sprintf("<div class='bg-white rounded-md py-1 px-2'><span class='font-semibold'>Process [%d]:</span> Name: %s, User: %s, Command: %s</div>", i, name, username, cmdline))
 	}
 
-	processListHTML := "<div class='process-data p-4 gap-4'><ul>" + strings.Join(processInfo, "") + "</ul></div>"
-	return processListHTML, nil
+	html += strings.Join(processInfo, "")
+	html += "</div>"
+
+	return html, nil
 }

@@ -33,13 +33,13 @@ func NewServer() (*server, http.Handler) {
 	s.mux.Handle("/", http.FileServer(http.Dir("./htmx")))
 	s.mux.HandleFunc("/ws", s.subscribHandler)
 
-	 corsConfig := cors.New(cors.Options{
-        AllowedOrigins:   []string{"http://localhost:8080", "https://webtop-pw7d.onrender.com"},
-        AllowCredentials: true,
-        Debug:            true,
-    })
+	corsConfig := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8080", "https://webtop-pw7d.onrender.com"},
+		AllowCredentials: true,
+		Debug:            true,
+	})
 
-    handler := corsConfig.Handler(&s.mux)
+	handler := corsConfig.Handler(&s.mux)
 	// handler := cors.Default().Handler(&s.mux)
 	return s, handler
 }
@@ -128,22 +128,22 @@ func main() {
 				continue
 			}
 
-			processData, err := hardware.GetRunningProcess()
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
+			// processData, err := hardware.GetRunningProcess()
+			// if err != nil {
+			// 	fmt.Println(err)
+			// 	continue
+			// }
 
 			timeStamp := time.Now().Format("2006-01-02 15:04:05")
 
 			msg := []byte(`
-				<div hx-swap-oob="innerHTML:#update-timestamp">
-					<p><i style="color: green" class="fa fa-circle"></i> ` + timeStamp + `</p>
-				</div>
-				<div hx-swap-oob="innerHTML:#system-data">` + systemData + `</div>
-				<div hx-swap-oob="innerHTML:#cpu-data">` + cpuData + `</div>
-				<div hx-swap-oob="innerHTML:#disk-data">` + diskData + `</div>
-				<div hx-swap-oob="innerHTML:#process-data">` + processData + `</div>
+			<div hx-swap-oob="innerHTML:#update-timestamp">
+			<p><i style="color: green" class="fa fa-circle"></i> ` + timeStamp + `</p>
+			</div>
+			<div hx-swap-oob="innerHTML:#system-data">` + systemData + `</div>
+			<div hx-swap-oob="innerHTML:#cpu-data">` + cpuData + `</div>
+			<div hx-swap-oob="innerHTML:#disk-data">` + diskData + `</div>
+			<div hx-swap-oob="innerHTML:#process-data">` + "processData" + `</div>
 			`)
 			s.publishMsg(msg)
 			time.Sleep(3 * time.Second)
