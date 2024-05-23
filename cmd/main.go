@@ -128,6 +128,12 @@ func main() {
 				continue
 			}
 
+			processData, err := hardware.GetRunningProcess()
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
 			timeStamp := time.Now().Format("2006-01-02 15:04:05")
 
 			msg := []byte(`
@@ -137,6 +143,7 @@ func main() {
 				<div hx-swap-oob="innerHTML:#system-data">` + systemData + `</div>
 				<div hx-swap-oob="innerHTML:#cpu-data">` + cpuData + `</div>
 				<div hx-swap-oob="innerHTML:#disk-data">` + diskData + `</div>
+				<div hx-swap-oob="innerHTML:#process-data">` + processData + `</div>
 			`)
 			s.publishMsg(msg)
 			time.Sleep(3 * time.Second)

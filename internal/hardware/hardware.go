@@ -1,13 +1,16 @@
 package hardware
 
 import (
+	"fmt"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/disk"
 	"github.com/shirou/gopsutil/v4/host"
 	"github.com/shirou/gopsutil/v4/mem"
+	"github.com/shirou/gopsutil/v4/process"
 )
 
 const megabyteDiv uint64 = 1024 * 1024
@@ -86,3 +89,30 @@ func GetCpuSection() (string, error) {
 	return html, nil
 }
 
+
+func GetRunningProcess() (string, error) {
+	processes, err := process.Processes()
+	if err != nil {
+		return "", err
+	}
+
+	procs := make([]*process.Process, 0, len(processes))
+	for _, p := range processes {
+		proc, err := process.NewProcess(p.Pid)
+		if err != nil {
+			continue
+		}
+		procs = append(procs, proc)
+	}
+
+	var processInfo []string 
+	for _, p := range procs {
+		name, _ := p.Name()
+		username, _ := p.Username()
+		cmdline, _ := p.Cmdline()
+		processInfo = append(processInfo, fmt.Sprintf("<li>Name: %s, User: %s, Command: %s</li>", name, username, cmdline))
+	}
+
+	processListHTML := "<div class='process-data p-4 gap-4'><ul>" + strings.Join(processInfo, "") + "</ul></div>"
+	return processListHTML, nil
+}
